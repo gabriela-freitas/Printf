@@ -6,7 +6,7 @@
 /*   By: gafreita <gafreita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 20:05:33 by gafreita          #+#    #+#             */
-/*   Updated: 2022/03/05 23:06:21 by gafreita         ###   ########.fr       */
+/*   Updated: 2022/03/05 23:43:44 by gafreita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,26 @@ int	ft_printf(char *str, ...)
 {
 	char	*index;
 	size_t	len;
-	size_t	start;
 	int		count;
 	va_list	arguments;
 
 	va_start(arguments, str);
-	start = 0;
 	count = 0;
 	while (str)
 	{
 		index = ft_strchr(str, '%');
-		//printf("\nindex: %s", index);
 		if (index == 0)
 		{
 			count += write(1, str, ft_strlen(str));
 			break ;
 		}
 		len = (size_t)index - (size_t)str;
-		//printf("\nlen: %zu\nstart: %zu", len, start);
-		count += write(1, ft_substr(str, start, len + 1), len);
-		start += len + 2;
+		index = ft_substr(str, 0, len + 1);
+		count += write(1, index, len);
 		str += len;
 		count += check_identifier(*(++str), arguments);
 		str++;
-		//str++;
-		//printf("\nchar: %c\n", *str);
+		free (index);
 	}
 	va_end(arguments);
 	return (count);
@@ -66,7 +61,7 @@ static int	ft_putnbr_base(long long int n, char *base)
 		count += write(1, "-", 1);
 		n *= -1;
 	}
-	if (n >= ft_strlen(base))
+	if (n >= (long long int)ft_strlen(base))
 	{
 		ft_putnbr_base(n / ft_strlen(base), base);
 		ft_putnbr_base(n % ft_strlen(base), base);
@@ -121,11 +116,11 @@ static int	check_identifier(const char c, va_list args)
 	}
 	return (count);
 }
-
+/*
 int main ()
 {
 	int a = 12;
 	int b = 348389;
 	//ft_printf("Hello World!\n");
-	ft_printf("Here is a number: %d*And dont worry, another number: %d*", a, b);
-}
+	ft_printf("Here is a number: %dhyh78uy%defrqiuqh8q", a, b);
+}*/

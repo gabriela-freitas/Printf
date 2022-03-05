@@ -10,10 +10,13 @@ CC = gcc
 
 CFLAGS = -Wall -Werror -Wextra
 
-.c.o:
+all: libft $(NAME)
+
+.c.o: $(SRCS_ALL)
 	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o)
 
-all: $(NAME)
+libft:
+	make -C libft/
 
 $(NAME): $(OBJS_ALL)
 	@ar rcs $(NAME) $(OBJS_ALL)
@@ -22,10 +25,12 @@ $(NAME): $(OBJS_ALL)
 # 	@ar rcs $(NAME) $(OBJS_BONUS)
 
 clean:
-	@rm -f $(OBJS_ALL) $(OBJS_BONUS)
+	@rm -f $(OBJS_ALL)
+	make -C libft/ clean
 
 fclean: clean
 	@rm -f $(NAME)
+	make -C libft/ fclean
 
 re: fclean all
 

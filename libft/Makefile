@@ -34,8 +34,6 @@ all: $(NAME)
 
 $(NAME): $(OBJS_ALL)
 	@ar rcs $(NAME) $(OBJS_ALL)
-	# @mkdir -p obj
-	# @mv $(OBJS_ALL) obj
 
 bonus: $(OBJS_BONUS)
 	@ar rcs $(NAME) $(OBJS_BONUS)
