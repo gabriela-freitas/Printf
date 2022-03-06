@@ -6,41 +6,40 @@
 /*   By: gafreita <gafreita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 20:05:33 by gafreita          #+#    #+#             */
-/*   Updated: 2022/03/06 16:14:16 by gafreita         ###   ########.fr       */
+/*   Updated: 2022/03/06 17:51:54 by gafreita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
 static int	ft_putnbr_base(long long int n, char *base);
 static int	print_addres(void *ptr);
 static int	check_identifier(const char c, va_list args);
 static int	ft_putchar_str(va_list args, const char c);
 
-int	ft_printf(char *str, ...)
+int	ft_printf(const char *s, ...)
 {
 	char	*index;
 	size_t	len;
 	int		count;
 	va_list	arguments;
 
-	va_start(arguments, str);
+	va_start(arguments, s);
 	count = 0;
-	while (str)
+	while (s)
 	{
-		index = ft_strchr(str, '%');
+		index = ft_strchr(s, '%');
 		if (index == 0)
 		{
-			count += write(1, str, ft_strlen(str));
+			count += write(1, s, ft_strlen(s));
 			break ;
 		}
-		len = (size_t)index - (size_t)str;
-		index = ft_substr(str, 0, len + 1);
+		len = (size_t)index - (size_t)s;
+		index = ft_substr(s, 0, len + 1);
 		count += write(1, index, len);
-		str += len;
-		count += check_identifier(*(++str), arguments);
-		str++;
+		s += len;
+		count += check_identifier(*(++s), arguments);
+		s++;
 		free (index);
 	}
 	va_end(arguments);
@@ -129,13 +128,4 @@ static int	check_identifier(const char c, va_list args)
 	if (c == 's' || c == 'c')
 		count = ft_putchar_str(args, c);
 	return (count);
-}
-
-int main ()
-{
-	int a = 12;
-	int b = 348389;
-	char *str = "I am a string!";
-	//ft_printf("Hello World!\n");
-	ft_printf("Here is a number: %d\nAnd another number:%d\nOh and a string: %s\nNow a character from this string: %c\n", a, b, str, str[0]);
 }
