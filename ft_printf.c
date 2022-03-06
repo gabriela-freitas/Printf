@@ -6,7 +6,7 @@
 /*   By: gafreita <gafreita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 20:05:33 by gafreita          #+#    #+#             */
-/*   Updated: 2022/03/06 00:04:17 by gafreita         ###   ########.fr       */
+/*   Updated: 2022/03/06 16:14:16 by gafreita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 static int	ft_putnbr_base(long long int n, char *base);
 static int	print_addres(void *ptr);
 static int	check_identifier(const char c, va_list args);
+static int	ft_putchar_str(va_list args, const char c);
 
 int	ft_printf(char *str, ...)
 {
@@ -90,13 +91,29 @@ static int	print_addres(void *ptr)
 	return (count);
 }
 
-static int	check_identifier(const char c, va_list args)
+static int	ft_putchar_str(va_list args, const char c)
 {
-	char	*aux;
 	int		count;
+	char	aux;
+	char	*str;
 
 	if (c == 'c')
-		count = write (1, va_arg(args, char *), 1);
+	{
+		aux = va_arg(args, int);
+		count = write (1, &aux, 1);
+	}
+	else
+	{
+		str = va_arg(args, char *);
+		count = write (1, str, ft_strlen(str));
+	}
+	return (count);
+}
+
+static int	check_identifier(const char c, va_list args)
+{
+	int		count;
+
 	if (c == 'd' || c == 'i')
 		count = ft_putnbr_base(va_arg(args, int), "0123456789");
 	if (c == 'u')
@@ -109,18 +126,16 @@ static int	check_identifier(const char c, va_list args)
 		count = write(1, "%%", 1);
 	if (c == 'p')
 		count = print_addres(va_arg(args, void *));
-	if (c == 's')
-	{
-		aux = va_arg(args, char *);
-		count = write (1, aux, ft_strlen(aux));
-	}
+	if (c == 's' || c == 'c')
+		count = ft_putchar_str(args, c);
 	return (count);
 }
-/*
+
 int main ()
 {
 	int a = 12;
 	int b = 348389;
+	char *str = "I am a string!";
 	//ft_printf("Hello World!\n");
-	ft_printf("Here is a number: %dhyh78uy%defrqiuqh8q", a, b);
-}*/
+	ft_printf("Here is a number: %d\nAnd another number:%d\nOh and a string: %s\nNow a character from this string: %c\n", a, b, str, str[0]);
+}
