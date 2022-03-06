@@ -18,8 +18,11 @@ all: libft $(NAME)
 libft:
 	make -C libft/
 
+extract: libft.a
+	ar -xv libft.a
+
 $(NAME): $(OBJS_ALL)
-	@ar rcs $(NAME) $(OBJS_ALL)
+	@ar rcs $(NAME) $(OBJS_ALL) -Llibft -lft
 
 # bonus: $(OBJS_BONUS)
 # 	@ar rcs $(NAME) $(OBJS_BONUS)
@@ -34,4 +37,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re libft

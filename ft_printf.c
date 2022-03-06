@@ -6,7 +6,7 @@
 /*   By: gafreita <gafreita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 20:05:33 by gafreita          #+#    #+#             */
-/*   Updated: 2022/03/05 23:43:44 by gafreita         ###   ########.fr       */
+/*   Updated: 2022/03/06 00:04:17 by gafreita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ static int	check_identifier(const char c, va_list args)
 	int		count;
 
 	if (c == 'c')
-		count = write (1, va_arg(args, char *), 1); //aqui ele ta um void * e tudo certo
+		count = write (1, va_arg(args, char *), 1);
 	if (c == 'd' || c == 'i')
 		count = ft_putnbr_base(va_arg(args, int), "0123456789");
 	if (c == 'u')
