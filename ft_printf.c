@@ -6,14 +6,13 @@
 /*   By: gafreita <gafreita@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 20:05:33 by gafreita          #+#    #+#             */
-/*   Updated: 2022/03/06 17:51:54 by gafreita         ###   ########.fr       */
+/*   Updated: 2022/03/07 20:53:52 by gafreita         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
 static int	ft_putnbr_base(long long int n, char *base);
-static int	print_addres(void *ptr);
 static int	check_identifier(const char c, va_list args);
 static int	ft_putchar_str(va_list args, const char c);
 
@@ -48,17 +47,17 @@ int	ft_printf(const char *s, ...)
 
 static int	ft_putnbr_base(long long int n, char *base)
 {
-	int	count;
+	int	temp;
 
-	count = 0;
+	temp = n;
 	if (n == -2147483648)
 	{
-		count += write(1, "-2147483648", 11);
-		return (count);
+		write(1, "-2147483648", 11);
+		return (11);
 	}
 	if (n < 0)
 	{
-		count += write(1, "-", 1);
+		write(1, "-", 1);
 		n *= -1;
 	}
 	if (n >= (long long int)ft_strlen(base))
@@ -67,27 +66,25 @@ static int	ft_putnbr_base(long long int n, char *base)
 		ft_putnbr_base(n % ft_strlen(base), base);
 	}
 	else
-		count += write(1, &base[n], 1);
-	return (count);
+		write(1, &base[n], 1);
+	return (int_count(temp, ft_strlen(base)));
 }
 
-static int	print_addres(void *ptr)
+static int	ft_u_base(unsigned int n, char *base)
 {
-	char		hex[12];
-	int			i;
-	int			count;
-	uintptr_t	num;
+	unsigned int	temp;
 
-	num = (uintptr_t) ptr;
-	count = write (1, "0x", 2);
-	i = 12;
-	while (--i >= 0)
+	if (n < 0)
+		ft_u_base(n, base);
+	temp = n;
+	if (n >= (unsigned long)ft_strlen(base))
 	{
-		hex[i] = "0123456789abcdef"[num % 16];
-		num = num / 16;
+		ft_u_base(n / ft_strlen(base), base);
+		ft_u_base(n % ft_strlen(base), base);
 	}
-	count += write(1, hex, 12);
-	return (count);
+	else
+		write(1, &base[n], 1);
+	return (unsigned_count(temp, ft_strlen(base)));
 }
 
 static int	ft_putchar_str(va_list args, const char c)
@@ -104,6 +101,8 @@ static int	ft_putchar_str(va_list args, const char c)
 	else
 	{
 		str = va_arg(args, char *);
+		if (!str)
+			return (write(1, "(null)", 6));
 		count = write (1, str, ft_strlen(str));
 	}
 	return (count);
@@ -116,15 +115,18 @@ static int	check_identifier(const char c, va_list args)
 	if (c == 'd' || c == 'i')
 		count = ft_putnbr_base(va_arg(args, int), "0123456789");
 	if (c == 'u')
-		count = ft_putnbr_base(va_arg(args, unsigned int), "0123456789");
+		count = ft_u_base(va_arg(args, unsigned int), "0123456789");
 	if (c == 'x')
-		count = ft_putnbr_base(va_arg(args, int), "0123456789abcdef");
+		count = ft_u_base(va_arg(args, unsigned int), "0123456789abcdef");
 	if (c == 'X')
-		count = ft_putnbr_base(va_arg(args, int), "0123456789ABCDEF");
+		count = ft_u_base(va_arg(args, unsigned int), "0123456789ABCDEF");
 	if (c == '%')
 		count = write(1, "%%", 1);
 	if (c == 'p')
-		count = print_addres(va_arg(args, void *));
+	{
+		write (1, "0x", 2);
+		count = ft_u_add(va_arg(args, uintptr_t), "0123456789abcdef") + 2;
+	}
 	if (c == 's' || c == 'c')
 		count = ft_putchar_str(args, c);
 	return (count);

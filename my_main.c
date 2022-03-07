@@ -1,12 +1,9 @@
 #include "ft_printf.h"
+#include <stdio.h>
 
 int main ()
 {
-	char *str = "*";
-	int	retorno;
-	void *prt;
-	prt = &retorno;
-
-	retorno = ft_printf("This is an empity string: %s\nThis is an address: %p\n", str, prt);
-	ft_printf("retorno: %d", retorno);
+	int retorno = ft_printf("%x\n", 2147483647);
+	int retornop = printf("%x\n", 2147483647);
+	ft_printf("retorno: %d, retorno ok: %d", retorno, retornop);
 }
