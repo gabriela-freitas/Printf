@@ -4,11 +4,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-#Dir of the libft
-
 LIBFT = libft
-
-#File .h || -L = dir of the .h file || -lft, -l to say its a lib, ft the name of the lib
 
 HEADER = ft_printf.h -L./libft -lft
 
